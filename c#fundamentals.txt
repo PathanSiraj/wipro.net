@@ -1,0 +1,269 @@
+// 1.Create a console application to accept the side of a square and print the area of the square.
+   
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        double side, area;
+        Console.Write("Enter side: ");
+        side = Convert.ToDouble(Console.ReadLine());
+        area = side * side;
+        Console.WriteLine("Area = " + area);
+    }
+}
+
+// 2.Create a console application that finds number of digits and alphabets in a given string.
+  
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        string str;
+        int alphabets = 0, digits = 0;
+        Console.Write("Enter a string: ");
+        str = Console.ReadLine();
+        foreach (char ch in str)
+        {
+            if (char.IsLetter(ch))
+                alphabets++;
+            else if (char.IsDigit(ch))
+                digits++;
+        }
+        Console.WriteLine("Alphabets = " + alphabets);
+        Console.WriteLine("Digits = " + digits);
+    }
+}
+
+
+/* 3.Create a console application that accepts a string and increments each character in the string by 1 and toggle all characters in the new string to UPPER CASE or LOWER CASE.*/
+
+
+
+using System;
+using System.Text;
+class Program
+{
+    static void Main(string[] args)
+    {
+        string str;
+        StringBuilder result = new StringBuilder();
+        Console.Write("Enter a string: ");
+        str = Console.ReadLine();
+        foreach (char ch in str)
+        {
+            char c = (char)(ch + 1);
+            if (char.IsUpper(c))
+                c = char.ToLower(c);
+            else if (char.IsLower(c))
+                c = char.ToUpper(c);
+            result.Append(c);
+        }
+        Console.WriteLine(result.ToString());
+    }
+}
+
+
+/* 4.Create a console application to accept a string and perform below string manipulation on the same.
+Print the string in reverse order.
+Extract part of the string from 2nd position till the end of the string.
+Replace any given character by '$' and print the new string.
+Copy the string to another string variable. Modify the data in 2nd string variable and print both the strings.*/
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        string str, str2;
+        char ch;
+        Console.Write("Enter a string: ");
+        str = Console.ReadLine();
+        char[] arr = str.ToCharArray();
+        Array.Reverse(arr);
+        Console.WriteLine("Reverse: " + new string(arr));
+        Console.WriteLine("Substring: " + str.Substring(1));
+        Console.Write("Enter character to replace: ");
+        ch = Convert.ToChar(Console.ReadLine());
+        Console.WriteLine("New String: " + str.Replace(ch, '$'));
+        str2 = str;
+        str2 = str2 + " Welcome";
+        Console.WriteLine("Original: " + str);
+        Console.WriteLine("Modified: " + str2);
+    }
+}
+
+/* 5.Write a simple program that accepts two numbers num1 and num2.
+
+Assign num1 to num2 by pre-incrementing num1 and observe the output.
+Assign num1 to num2 by post-incrementing num1 and observe the output.
+Swap both values.*/
+
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        int num1, num2, temp;
+        Console.Write("Enter num1: ");
+        num1 = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Enter num2: ");
+        num2 = Convert.ToInt32(Console.ReadLine());
+        num2 = ++num1;
+        Console.WriteLine("After Pre-Increment:");
+        Console.WriteLine("num1 = " + num1);
+        Console.WriteLine("num2 = " + num2);
+        Console.Write("Enter num1 again: ");
+        num1 = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Enter num2 again: ");
+        num2 = Convert.ToInt32(Console.ReadLine());
+        num2 = num1++;
+        Console.WriteLine("After Post-Increment:");
+        Console.WriteLine("num1 = " + num1);
+        Console.WriteLine("num2 = " + num2);
+        temp = num1;
+        num1 = num2;
+        num2 = temp;
+        Console.WriteLine("After Swapping:");
+        Console.WriteLine("num1 = " + num1);
+        Console.WriteLine("num2 = " + num2);
+    }
+}
+
+
+
+// 6.Write a program which asks the user for his login and password. Both must be strings. After 3 wrong attempts, the user will be rejected.
+
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        string login = "admin";
+        string password = "1234";
+        string user, pass;
+        int attempts = 0;
+        while (attempts < 3)
+        {
+            Console.Write("Enter Login: ");
+            user = Console.ReadLine();
+            Console.Write("Enter Password: ");
+            pass = Console.ReadLine();
+            if (user == login && pass == password)
+            {
+                Console.WriteLine("Login Successful");
+                return;
+            }
+            attempts++;
+            Console.WriteLine("Invalid Login or Password");
+        }
+        Console.WriteLine("User Rejected");
+    }
+}
+
+
+// 7.Write a program that accepts 2 numbers and prints whether the 2nd number is in unit's, ten's, hundreds or thousands place in the 1st number.
+
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        int num1, num2;
+        Console.Write("Enter first number: ");
+        num1 = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Enter second number: ");
+        num2 = Convert.ToInt32(Console.ReadLine());
+        if (num1 % 10 == num2)
+            Console.WriteLine("The number is in Unit's place");
+        else if ((num1 / 10) % 10 == num2)
+            Console.WriteLine("The number is in Ten's place");
+        else if ((num1 / 100) % 10 == num2)
+            Console.WriteLine("The number is in Hundred's place");
+        else if ((num1 / 1000) % 10 == num2)
+            Console.WriteLine("The number is in Thousand's place");
+        else
+            Console.WriteLine("The number is not present");
+    }
+}
+
+
+
+// 8.Write a program that finds number of elements in an array without using built-in features.
+
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        int n, count = 0;
+        Console.Write("Enter number of elements: ");
+        n = Convert.ToInt32(Console.ReadLine());
+        int[] arr = new int[n];
+        Console.WriteLine("Enter array elements:");
+        for (int i = 0; i < n; i++)
+            arr[i] = Convert.ToInt32(Console.ReadLine());
+        for (int i = 0; i < n; i++)
+            count++;
+        Console.WriteLine("Number of elements = " + count);
+    }
+}
+
+
+
+
+/* 9.Write a program to accept 10 integers into an array and perform the below actions:
+
+Print the elements in descending order.
+Find the minimum value and maximum value entered.
+Print the sum obtained after adding all the numbers in the array.*/
+
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        int[] arr = new int[10];
+        int sum = 0, max, min, temp;
+        Console.WriteLine("Enter 10 integers:");
+        for (int i = 0; i < 10; i++)
+            arr[i] = Convert.ToInt32(Console.ReadLine());
+        max = arr[0];
+        min = arr[0];
+        for (int i = 0; i < 10; i++)
+        {
+            if (arr[i] > max)
+                max = arr[i];
+            if (arr[i] < min)
+                min = arr[i];
+            sum += arr[i];
+        }
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = i + 1; j < 10; j++)
+            {
+                if (arr[i] < arr[j])
+                {
+                    temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+        Console.WriteLine("Descending Order:");
+        for (int i = 0; i < 10; i++)
+            Console.Write(arr[i] + " ");
+        Console.WriteLine();
+        Console.WriteLine("Maximum = " + max);
+        Console.WriteLine("Minimum = " + min);
+        Console.WriteLine("Sum = " + sum);
+    }
+}
