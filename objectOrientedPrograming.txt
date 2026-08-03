@@ -1,0 +1,125 @@
+//1
+
+using System;
+class Employee
+{
+    string name;
+    decimal basicSalary, hra, da, tax, grossPay, netPay;
+    public Employee(string n, decimal b)
+    {
+        name = n;
+        basicSalary = b;
+    }
+    public void CalculateNetPay()
+    {
+        hra = basicSalary * 15 / 100;
+        da = basicSalary * 10 / 100;
+        grossPay = basicSalary + hra + da;
+        tax = grossPay * 8 / 100;
+        netPay = grossPay - tax;
+    }
+    public void Display()
+    {
+        Console.WriteLine("Employee Name : " + name);
+        Console.WriteLine("Basic Salary  : " + basicSalary);
+        Console.WriteLine("HRA           : " + hra);
+        Console.WriteLine("DA            : " + da);
+        Console.WriteLine("Gross Pay     : " + grossPay);
+        Console.WriteLine("Tax           : " + tax);
+        Console.WriteLine("Net Pay       : " + netPay);
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        string name;
+        decimal salary;
+        Console.Write("Enter Employee Name: ");
+        name = Console.ReadLine();
+        Console.Write("Enter Basic Salary: ");
+        salary = Convert.ToDecimal(Console.ReadLine());
+        Employee emp = new Employee(name, salary);
+        emp.CalculateNetPay();
+        emp.Display();
+    }
+}
+
+
+
+
+//2
+
+
+using System;
+class Stock
+{
+    string stockName;
+    string stockSymbol;
+    double previousClosingPrice;
+    double currentClosingPrice;
+    public Stock(string name, string symbol, double previousPrice, double currentPrice)
+    {
+        stockName = name;
+        stockSymbol = symbol;
+        previousClosingPrice = previousPrice;
+        currentClosingPrice = currentPrice;
+    }
+    public double GetChangePercentage()
+    {
+        return ((currentClosingPrice - previousClosingPrice) / previousClosingPrice) * 100;
+    }
+    public void Display()
+    {
+        Console.WriteLine("Stock Name : " + stockName);
+        Console.WriteLine("Stock Symbol : " + stockSymbol);
+        Console.WriteLine("Previous Closing Price : " + previousClosingPrice);
+        Console.WriteLine("Current Closing Price : " + currentClosingPrice);
+        Console.WriteLine("Percentage Change : " + GetChangePercentage() + "%");
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        string name, symbol;
+        double previousPrice, currentPrice;
+        Console.Write("Enter Stock Name: ");
+        name = Console.ReadLine();
+        Console.Write("Enter Stock Symbol: ");
+        symbol = Console.ReadLine();
+        Console.Write("Enter Previous Closing Price: ");
+        previousPrice = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Enter Current Closing Price: ");
+        currentPrice = Convert.ToDouble(Console.ReadLine());
+        Stock s = new Stock(name, symbol, previousPrice, currentPrice);
+        s.Display();
+    }
+}
+
+
+
+//3
+
+
+using System;
+class RandomHelper
+{
+    static Random r = new Random();
+    public static int randint(int min, int max)
+    {
+        return r.Next(min, max + 1);
+    }
+    public static double randdouble(int min, int max)
+    {
+        return min + r.NextDouble() * (max - min);
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Random Integer: " + RandomHelper.randint(1, 10));
+        Console.WriteLine("Random Double: " + RandomHelper.randdouble(1, 10));
+    }
+}
