@@ -1,0 +1,671 @@
+//Inheritance-------------
+
+
+//1.
+
+
+using System;
+class Person
+{
+    private string firstName;
+    private string lastName;
+    private string emailAddress;
+    private DateTime dateOfBirth;
+    public Person(string fn, string ln, string email, DateTime dob)
+    {
+        firstName = fn;
+        lastName = ln;
+        emailAddress = email;
+        dateOfBirth = dob;
+    }
+    public bool IsAdult
+    {
+        get
+        {
+            return DateTime.Now.Year - dateOfBirth.Year >= 18;
+        }
+    }
+    public string SunSign
+    {
+        get
+        {
+            int d = dateOfBirth.Day;
+            int m = dateOfBirth.Month;
+            if ((m == 3 && d >= 21) || (m == 4 && d <= 19)) return "Aries";
+            if ((m == 4 && d >= 20) || (m == 5 && d <= 20)) return "Taurus";
+            if ((m == 5 && d >= 21) || (m == 6 && d <= 20)) return "Gemini";
+            if ((m == 6 && d >= 21) || (m == 7 && d <= 22)) return "Cancer";
+            if ((m == 7 && d >= 23) || (m == 8 && d <= 22)) return "Leo";
+            if ((m == 8 && d >= 23) || (m == 9 && d <= 22)) return "Virgo";
+            if ((m == 9 && d >= 23) || (m == 10 && d <= 22)) return "Libra";
+            if ((m == 10 && d >= 23) || (m == 11 && d <= 21)) return "Scorpio";
+            if ((m == 11 && d >= 22) || (m == 12 && d <= 21)) return "Sagittarius";
+            if ((m == 12 && d >= 22) || (m == 1 && d <= 19)) return "Capricorn";
+            if ((m == 1 && d >= 20) || (m == 2 && d <= 18)) return "Aquarius";
+            return "Pisces";
+        }
+    }
+    public bool IsBirthDay
+    {
+        get
+        {
+            return DateTime.Now.Day == dateOfBirth.Day && DateTime.Now.Month == dateOfBirth.Month;
+        }
+    }
+    public string ScreenName
+    {
+        get
+        {
+            return firstName.ToLower() + lastName.ToLower() + dateOfBirth.ToString("ddMMyy");
+        }
+    }
+}
+class Employee : Person
+{
+    public double Salary { get; set; }
+    public Employee(string fn, string ln, string email, DateTime dob, double salary) : base(fn, ln, email, dob)
+    {
+        Salary = salary;
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Employee emp = new Employee("Hari", "Doe", "hari@gmail.com", new DateTime(2000, 5, 25), 50000);
+        Console.WriteLine("Is Adult: " + emp.IsAdult);
+        Console.WriteLine("Sun Sign: " + emp.SunSign);
+        Console.WriteLine("Is Birthday: " + emp.IsBirthDay);
+        Console.WriteLine("Screen Name: " + emp.ScreenName);
+        Console.WriteLine("Salary: " + emp.Salary);
+    }
+}
+
+//2.
+
+using System;
+class Person
+{
+    protected string FirstName;
+    protected string LastName;
+    protected string EmailAddress;
+    protected DateTime DateOfBirth;
+    public Person(string fn, string ln, string email, DateTime dob)
+    {
+        FirstName = fn;
+        LastName = ln;
+        EmailAddress = email;
+        DateOfBirth = dob;
+    }
+}
+class HourlyEmployee : Person
+{
+    public double HoursWorked;
+    public double PayPerHour;
+    public HourlyEmployee(string fn, string ln, string email, DateTime dob, double hours, double pay) : base(fn, ln, email, dob)
+    {
+        HoursWorked = hours;
+        PayPerHour = pay;
+    }
+    public double TotalSalary()
+    {
+        return HoursWorked * PayPerHour;
+    }
+}
+class PermanentEmployee : Person
+{
+    public double BasicSalary;
+    public double HRA;
+    public double DA;
+    public double Tax;
+    public double NetPay;
+    public double TotalPay;
+    public PermanentEmployee(string fn, string ln, string email, DateTime dob, double salary) : base(fn, ln, email, dob)
+    {
+        BasicSalary = salary;
+    }
+    public void CalculateSalary()
+    {
+        HRA = BasicSalary * 0.15;
+        DA = BasicSalary * 0.10;
+        TotalPay = BasicSalary + HRA + DA;
+        Tax = TotalPay * 0.08;
+        NetPay = TotalPay - Tax;
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        HourlyEmployee h = new HourlyEmployee("Hari", "Kumar", "hari@gmail.com", new DateTime(2000, 5, 25), 40, 500);
+        Console.WriteLine("Hourly Employee Salary = " + h.TotalSalary());
+
+        PermanentEmployee p = new PermanentEmployee("Ravi", "Kumar", "ravi@gmail.com", new DateTime(1998, 10, 15), 50000);
+        p.CalculateSalary();
+        Console.WriteLine("HRA = " + p.HRA);
+        Console.WriteLine("DA = " + p.DA);
+        Console.WriteLine("Total Pay = " + p.TotalPay);
+        Console.WriteLine("Tax = " + p.Tax);
+        Console.WriteLine("Net Pay = " + p.NetPay);
+    }
+}
+
+
+
+//3.
+
+using System;
+interface IPayable
+{
+    double CalculatePay();
+}
+class Person
+{
+    protected string FirstName;
+    protected string LastName;
+    protected string EmailAddress;
+    protected DateTime DateOfBirth;
+    public Person(string fn, string ln, string email, DateTime dob)
+    {
+        FirstName = fn;
+        LastName = ln;
+        EmailAddress = email;
+        DateOfBirth = dob;
+    }
+}
+class HourlyEmployee : Person, IPayable
+{
+    public double HoursWorked;
+    public double PayPerHour;
+    public HourlyEmployee(string fn, string ln, string email, DateTime dob, double hours, double pay) : base(fn, ln, email, dob)
+    {
+        HoursWorked = hours;
+        PayPerHour = pay;
+    }
+    public double CalculatePay()
+    {
+        return HoursWorked * PayPerHour;
+    }
+}
+class PermanentEmployee : Person, IPayable
+{
+    public double BasicSalary;
+    public PermanentEmployee(string fn, string ln, string email, DateTime dob, double salary) : base(fn, ln, email, dob)
+    {
+        BasicSalary = salary;
+    }
+    public double CalculatePay()
+    {
+        double hra = BasicSalary * 0.15;
+        double da = BasicSalary * 0.10;
+        double totalPay = BasicSalary + hra + da;
+        double tax = totalPay * 0.08;
+        return totalPay - tax;
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        HourlyEmployee h = new HourlyEmployee("Hari", "Kumar", "hari@gmail.com", new DateTime(2000, 5, 25), 40, 500);
+        PermanentEmployee p = new PermanentEmployee("Ravi", "Kumar", "ravi@gmail.com", new DateTime(1998, 10, 15), 50000);
+        Console.WriteLine("Hourly Employee Pay = " + h.CalculatePay());
+        Console.WriteLine("Permanent Employee Net Pay = " + p.CalculatePay());
+    }
+}
+
+
+
+//4.
+
+
+using System;
+interface IPayable
+{
+    double CalculatePay();
+}
+class Person
+{
+    protected string FirstName;
+    protected string LastName;
+    protected string EmailAddress;
+    protected DateTime DateOfBirth;
+    public Person(string fn, string ln, string email, DateTime dob)
+    {
+        FirstName = fn;
+        LastName = ln;
+        EmailAddress = email;
+        DateOfBirth = dob;
+    }
+}
+class HourlyEmployee : Person, IPayable
+{
+    public double HoursWorked;
+    public double PayPerHour;
+    public HourlyEmployee(string fn, string ln, string email, DateTime dob, double hours, double pay) : base(fn, ln, email, dob)
+    {
+        HoursWorked = hours;
+        PayPerHour = pay;
+    }
+    public double CalculatePay()
+    {
+        return HoursWorked * PayPerHour;
+    }
+}
+class PermanentEmployee : Person, IPayable
+{
+    public double BasicSalary;
+    public PermanentEmployee(string fn, string ln, string email, DateTime dob, double salary) : base(fn, ln, email, dob)
+    {
+        BasicSalary = salary;
+    }
+    public double CalculatePay()
+    {
+        double hra = BasicSalary * 0.15;
+        double da = BasicSalary * 0.10;
+        double totalPay = BasicSalary + hra + da;
+        double tax = totalPay * 0.08;
+        return totalPay - tax;
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        HourlyEmployee h = new HourlyEmployee("Hari", "Kumar", "hari@gmail.com", new DateTime(2000, 5, 25), 40, 500);
+        PermanentEmployee p = new PermanentEmployee("Ravi", "Kumar", "ravi@gmail.com", new DateTime(1998, 10, 15), 50000);
+        Console.WriteLine("Hourly Employee Pay = " + h.CalculatePay());
+        Console.WriteLine("Permanent Employee Pay = " + p.CalculatePay());
+    }
+}
+
+
+
+//5.
+
+
+using System;
+interface IPayable
+{
+    double CalculatePay();
+}
+class Person
+{
+    protected string FirstName;
+    protected string LastName;
+    protected string EmailAddress;
+    protected DateTime DateOfBirth;
+    public Person(string fn, string ln, string email, DateTime dob)
+    {
+        FirstName = fn;
+        LastName = ln;
+        EmailAddress = email;
+        DateOfBirth = dob;
+    }
+}
+class HourlyEmployee : Person, IPayable
+{
+    public double HoursWorked;
+    public double PayPerHour;
+    public HourlyEmployee(string fn, string ln, string email, DateTime dob, double hours, double pay) : base(fn, ln, email, dob)
+    {
+        HoursWorked = hours;
+        PayPerHour = pay;
+    }
+    public double CalculatePay()
+    {
+        return HoursWorked * PayPerHour;
+    }
+}
+class PermanentEmployee : Person, IPayable
+{
+    public double BasicSalary;
+    public PermanentEmployee(string fn, string ln, string email, DateTime dob, double salary) : base(fn, ln, email, dob)
+    {
+        BasicSalary = salary;
+    }
+    public double CalculatePay()
+    {
+        double hra = BasicSalary * 0.15;
+        double da = BasicSalary * 0.10;
+        double totalPay = BasicSalary + hra + da;
+        double tax = totalPay * 0.08;
+        return totalPay - tax;
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        IPayable h = new HourlyEmployee("Hari", "Kumar", "hari@gmail.com", new DateTime(2000, 5, 25), 40, 500);
+        IPayable p = new PermanentEmployee("Ravi", "Kumar", "ravi@gmail.com", new DateTime(1998, 10, 15), 50000);
+        Console.WriteLine("Hourly Employee Pay = " + h.CalculatePay());
+        Console.WriteLine("Permanent Employee Pay = " + p.CalculatePay());
+    }
+}
+
+
+//Polymorphism------
+
+
+//1.
+
+
+using System;
+class Area
+{
+    public double CalculateArea(double radius)
+    {
+        return 3.14 * radius * radius;
+    }
+    public double CalculateArea(double length, double breadth)
+    {
+        return length * breadth;
+    }
+    public double CalculateArea(double b, double h, bool triangle)
+    {
+        return 0.5 * b * h;
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Area obj = new Area();
+        Console.Write("Enter radius: ");
+        double r = Convert.ToDouble(Console.ReadLine());
+        Console.WriteLine("Area of Circle = " + obj.CalculateArea(r));
+        Console.Write("Enter length: ");
+        double l = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Enter breadth: ");
+        double br = Convert.ToDouble(Console.ReadLine());
+        Console.WriteLine("Area of Rectangle = " + obj.CalculateArea(l, br));
+        Console.Write("Enter base: ");
+        double b = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Enter height: ");
+        double h = Convert.ToDouble(Console.ReadLine());
+        Console.WriteLine("Area of Triangle = " + obj.CalculateArea(b, h, true));
+    }
+}
+
+
+//2.
+
+
+using System;
+class Math
+{
+    public int Add(int a, int b)
+    {
+        return a + b;
+    }
+    public int Add(int a, int b, int c)
+    {
+        return a + b + c;
+    }
+    public int Subtract(int a, int b)
+    {
+        return a - b;
+    }
+    public int Subtract(int a, int b, int c)
+    {
+        return a - b - c;
+    }
+    public int Multiply(int a, int b)
+    {
+        return a * b;
+    }
+    public int Multiply(int a, int b, int c)
+    {
+        return a * b * c;
+    }
+    public int Divide(int a, int b)
+    {
+        return a / b;
+    }
+    public int Divide(int a, int b, int c)
+    {
+        return a / b / c;
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Math obj = new Math();
+        Console.WriteLine("Add(10,20) = " + obj.Add(10,20));
+        Console.WriteLine("Add(10,20,30) = " + obj.Add(10,20,30));
+        Console.WriteLine("Subtract(30,10) = " + obj.Subtract(30,10));
+        Console.WriteLine("Subtract(50,20,10) = " + obj.Subtract(50,20,10));
+        Console.WriteLine("Multiply(5,4) = " + obj.Multiply(5,4));
+        Console.WriteLine("Multiply(2,3,4) = " + obj.Multiply(2,3,4));
+        Console.WriteLine("Divide(20,5) = " + obj.Divide(20,5));
+        Console.WriteLine("Divide(100,5,2) = " + obj.Divide(100,5,2));
+    }
+}
+
+//Exceptions-----
+
+//1.
+
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        string name;
+        int m1, m2, m3;
+        try
+        {
+            Console.Write("Enter Student Name: ");
+            name = Console.ReadLine();
+            Console.Write("Enter Marks of Subject 1: ");
+            m1 = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Enter Marks of Subject 2: ");
+            m2 = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Enter Marks of Subject 3: ");
+            m3 = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Student Name: " + name);
+            Console.WriteLine("Subject 1 Marks: " + m1);
+            Console.WriteLine("Subject 2 Marks: " + m2);
+            Console.WriteLine("Subject 3 Marks: " + m3);
+            Console.WriteLine("Total Marks: " + (m1 + m2 + m3));
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Error: Please enter only integer values for marks.");
+        }
+    }
+}
+
+
+//2.
+
+using System;
+class NegativeNumberException : Exception
+{
+    public NegativeNumberException(string message) : base(message)
+    {
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        string name;
+        int m1, m2, m3;
+        try
+        {
+            Console.Write("Enter Student Name: ");
+            name = Console.ReadLine();
+            Console.Write("Enter Marks of Subject 1: ");
+            m1 = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Enter Marks of Subject 2: ");
+            m2 = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Enter Marks of Subject 3: ");
+            m3 = Convert.ToInt32(Console.ReadLine());
+
+            if (m1 < 0 || m2 < 0 || m3 < 0)
+                throw new NegativeNumberException("Marks cannot be less than zero.");
+
+            Console.WriteLine("Student Name: " + name);
+            Console.WriteLine("Total Marks: " + (m1 + m2 + m3));
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Error: Please enter only integer values.");
+        }
+        catch (NegativeNumberException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
+
+
+//3.
+
+using System;
+class Person
+{
+    string firstName;
+    string lastName;
+    string email;
+    DateTime dateOfBirth;
+    public Person(string fn, string ln, string em, DateTime dob)
+    {
+        firstName = fn;
+        lastName = ln;
+        email = em;
+        dateOfBirth = dob;
+    }
+    public void Display()
+    {
+        Console.WriteLine("First Name : " + firstName);
+        Console.WriteLine("Last Name : " + lastName);
+        Console.WriteLine("Email : " + email);
+        Console.WriteLine("Date of Birth : " + dateOfBirth.ToShortDateString());
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            Console.Write("Enter First Name: ");
+            string fn = Console.ReadLine();
+            Console.Write("Enter Last Name: ");
+            string ln = Console.ReadLine();
+            Console.Write("Enter Email: ");
+            string email = Console.ReadLine();
+            Console.Write("Enter Date of Birth (dd/mm/yyyy): ");
+            DateTime dob = Convert.ToDateTime(Console.ReadLine());
+            if (!email.Contains("@"))
+                throw new Exception("Invalid Email Address.");
+            Person p = new Person(fn, ln, email, dob);
+            p.Display();
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid Date Format.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
+
+
+//4.
+
+
+using System;
+using System.Globalization;
+class Person
+{
+    string firstName;
+    string lastName;
+    string email;
+    DateTime dateOfBirth;
+    public Person(string fn, string ln, string em, DateTime dob)
+    {
+        firstName = fn;
+        lastName = ln;
+        email = em;
+        dateOfBirth = dob;
+    }
+    public void Display()
+    {
+        Console.WriteLine("First Name : " + firstName);
+        Console.WriteLine("Last Name : " + lastName);
+        Console.WriteLine("Email : " + email);
+        Console.WriteLine("Date Of Birth : " + dateOfBirth.ToString("dd/MM/yyyy"));
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            Console.Write("Enter First Name: ");
+            string fn = Console.ReadLine();
+            Console.Write("Enter Last Name: ");
+            string ln = Console.ReadLine();
+            Console.Write("Enter Email: ");
+            string email = Console.ReadLine();
+            Console.Write("Enter Date of Birth (dd/MM/yyyy): ");
+            DateTime dob = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            if (string.IsNullOrWhiteSpace(fn) || string.IsNullOrWhiteSpace(ln))
+                throw new Exception("FirstName and LastName should not be empty.");
+
+            foreach (char c in fn)
+                if (!char.IsLetter(c))
+                    throw new Exception("FirstName should contain only alphabets.");
+
+            foreach (char c in ln)
+                if (!char.IsLetter(c))
+                    throw new Exception("LastName should contain only alphabets.");
+
+            Person p = new Person(fn, ln, email, dob);
+            p.Display();
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid Date Format.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
+
+//File Handling------
+
+
+//1.
+
+using System;
+using System.IO;
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.Write("Enter file name: ");
+        string fileName = Console.ReadLine();
+        Console.Write("Enter content: ");
+        string content = Console.ReadLine();
+
+        StreamWriter sw = new StreamWriter(fileName);
+        sw.WriteLine(content);
+        sw.Close();
+
+        Console.WriteLine("File created and content written successfully.");
+    }
+}
+
+
