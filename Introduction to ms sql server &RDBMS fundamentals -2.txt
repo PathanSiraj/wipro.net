@@ -1,0 +1,372 @@
+//Quering sql server
+
+
+/*Browse different system database as well as user database.*/
+
+Query:
+------
+
+SELECT name
+FROM sys.databases;
+
+
+
+
+
+
+/*Write a SELECT statement that lists the customers along with their ID numbers. Include the last names, first names, and company names.*/
+
+query:
+------
+
+SELECT CustomerID,
+       LastName,
+       FirstName,
+       CompanyName
+FROM SalesLT.Customer;
+
+
+/*Write a query that displays all the employees listed in the HumanResources.Employee table who have the job title 'Research and Development Engineer'. Display the BusinessEntityID number, the LoginID, and the JobTitle for each one.*/
+
+
+
+SELECT BusinessEntityID,
+       LoginID,
+       JobTitle
+FROM HumanResources.Employee
+WHERE JobTitle = 'Research and Development Engineer';
+
+
+/*Write a query displaying all the columns of the Production.ProductCostHistory table from the rows that were modified on June 17, 2003.*/
+
+SELECT *
+FROM Production.ProductCostHistory
+WHERE ModifiedDate = '2003-06-17';
+
+
+
+
+/*Rewrite the query you wrote in question 3, changing it so that the employees who do not have the title Research and Development Engineer are displayed.*/
+
+SELECT BusinessEntityID,
+       LoginID,
+       JobTitle
+FROM HumanResources.Employee
+WHERE JobTitle <> 'Research and Development Engineer';
+
+
+
+/*The HumanResources.Employee table does not contain the employee names. Join that table to the Person.Person table on the BusinessEntityID column. Display the job title, birth date, first name, and last name.*/
+
+SELECT E.JobTitle,
+       E.BirthDate,
+       P.FirstName,
+       P.LastName
+FROM HumanResources.Employee E
+INNER JOIN Person.Person P
+ON E.BusinessEntityID = P.BusinessEntityID;
+
+
+/*The customer names also appear in the Person.Person table. Join the Sales.Customer table to the Person.Person table. The BusinessEntityID column in the Person.Person table matches the PersonID column in the Sales.Customer table. Display the CustomerID, StoreID, TerritoryID columns along with the name columns.*/
+
+SELECT C.CustomerID,
+       C.StoreID,
+       C.TerritoryID,
+       P.FirstName,
+       P.MiddleName,
+       P.LastName
+FROM Sales.Customer C
+INNER JOIN Person.Person P
+ON C.PersonID = P.BusinessEntityID;
+
+
+/*Extend the query written in question 2 to include the Sales.SalesOrderHeader table. Display the SalesOrderID column along with the columns already specified. The Sales.SalesOrderHeader table contains the CustomerID column.*/
+
+SELECT C.CustomerID,
+       P.LastName,
+       P.FirstName,
+       S.SalesOrderID
+FROM Sales.Customer C
+INNER JOIN Person.Person P
+ON C.PersonID = P.BusinessEntityID
+INNER JOIN Sales.SalesOrderHeader S
+ON C.CustomerID = S.CustomerID;
+
+
+
+/*Write a query that displays all the products along with the SalesOrderID even if an order has never been placed for that product. Join to the Sales.SalesOrderDetail table using the ProductID column.*/
+
+SELECT P.ProductID,
+       P.Name,
+       S.SalesOrderID
+FROM Production.Product P
+LEFT JOIN Sales.SalesOrderDetail S
+ON P.ProductID = S.ProductID;
+
+
+
+/*Write a query that displays the BusinessEntityID number, first name, middle name, and last name from the Person.Person table for only those rows that have E or B stored in the middle name column.*/
+
+SELECT BusinessEntityID,
+       FirstName,
+       MiddleName,
+       LastName
+FROM Person.Person
+WHERE MiddleName IN ('E', 'B');
+
+
+//working with DML
+------------------
+
+
+
+/*Write an UPDATE statement that changes all NULL values of the AddressLine2 column in the dbo.demoAddress table to N/A.*/
+
+
+UPDATE dbo.demoAddress
+SET AddressLine2 = 'N/A'
+WHERE AddressLine2 IS NULL;
+
+
+
+/*Write an UPDATE statement that corrects the UnitPrice with the ListPrice of each row of the dbo.demoSalesOrderDetail table by joining the table on the dbo.demoProduct table.*/
+
+UPDATE D
+SET D.UnitPrice = P.ListPrice
+FROM dbo.demoSalesOrderDetail D
+INNER JOIN dbo.demoProduct P
+ON D.ProductID = P.ProductID;
+
+
+
+/*Delete command will delete the data permanently, so ensure you have made a copy of the table before working on Delete command.
+
+Write a query that deletes the rows from the dbo.demoCustomer table where the LastName values begin with the letter S.*/
+
+DELETE FROM dbo.demoCustomer
+WHERE LastName LIKE 'S%';
+
+
+
+/*Delete the rows from the dbo.demoCustomer table if the customer has not placed an order or if the sum of the TotalDue from the dbo.demoSalesOrderHeader table for the customer is less than $1,000.*/
+
+DELETE FROM dbo.demoCustomer
+WHERE CustomerID IN
+(
+    SELECT C.CustomerID
+    FROM dbo.demoCustomer C
+    LEFT JOIN dbo.demoSalesOrderHeader H
+        ON C.CustomerID = H.CustomerID
+    GROUP BY C.CustomerID
+    HAVING SUM(ISNULL(H.TotalDue,0)) < 1000
+);
+
+
+
+
+/*Create demoProduct table with below attributes**
+
+* ProductID INT NOT NULL PRIMARY KEY
+* Name dbo.Name NOT NULL
+* Color NVARCHAR(15) NULL
+* StandardCost MONEY NOT NULL
+* ListPrice MONEY NOT NULL
+* Size NVARCHAR(5) NULL
+* Weight DECIMAL(8,2) NULL*/
+
+### SQL
+
+CREATE TABLE dbo.demoProduct
+(
+    ProductID INT PRIMARY KEY,
+    Name dbo.Name NOT NULL,
+    Color NVARCHAR(15) NULL,
+    StandardCost MONEY NOT NULL,
+    ListPrice MONEY NOT NULL,
+    Size NVARCHAR(5) NULL,
+    Weight DECIMAL(8,2) NULL
+);
+
+
+
+/*Insert five rows into the dbo.demoProduct table.*/
+
+INSERT INTO dbo.demoProduct
+(ProductID, Name, Color, StandardCost, ListPrice, Size, Weight)
+VALUES
+(1, 'Laptop', 'Black', 35000, 45000, '15', 2.50),
+(2, 'Mouse', 'White', 300, 500, 'S', 0.20),
+(3, 'Keyboard', 'Black', 800, 1200, 'M', 0.80),
+(4, 'Monitor', 'Black', 7000, 9500, '24', 4.50),
+(5, 'Printer', 'Gray', 5000, 7000, 'L', 6.75);
+
+
+//Built in functions
+
+
+
+/*Write a query using date functions.*/
+
+-- Display current system date and time
+SELECT GETDATE() AS CurrentDateTime;
+
+
+/*Write a query using the Production.Product table displaying the ProductID, Color, and Name columns. If the Color column contains a NULL value, replace the color with 'No Color'.*/
+
+SELECT ProductID,
+       ISNULL(Color, 'No Color') AS Color,
+       Name
+FROM Production.Product;
+
+
+/*Write a query that displays the first 10 characters of the AddressLine1 column in the Person.Address table.*/
+
+SELECT LEFT(AddressLine1, 10) AS AddressLine1
+FROM Person.Address;
+
+
+
+/*Write a query using string functions.*/
+
+SELECT UPPER(FirstName) AS FirstName,
+       LOWER(LastName) AS LastName
+FROM Person.Person;
+
+
+
+/*Write a query using the Sales.SpecialOffer table that multiplies the MaxQty column by the DiscountPct column. If the MaxQty value is NULL, replace it with the value 10. Include the SpecialOfferID column in the results.*/
+
+SELECT SpecialOfferID,
+       ISNULL(MaxQty, 10) * DiscountPct AS Result
+FROM Sales.SpecialOffer;
+
+
+
+/*Write a query that calculates the number of days between the date an order was placed and the date that it was shipped using the Sales.SalesOrderHeader table. Include the SalesOrderID, OrderDate, and ShipDate columns.*/
+
+SELECT SalesOrderID,
+       OrderDate,
+       ShipDate,
+       DATEDIFF(DAY, OrderDate, ShipDate) AS DaysTaken
+FROM Sales.SalesOrderHeader;
+
+
+/*Write a query that displays the year of each order date and the numeric month of each order date in separate columns in the results. Include the SalesOrderID and OrderDate columns.*/
+
+SELECT SalesOrderID,
+       OrderDate,
+       YEAR(OrderDate) AS OrderYear,
+       MONTH(OrderDate) AS OrderMonth
+FROM Sales.SalesOrderHeader;
+
+
+/*Write a query using the Sales.SalesOrderHeader table that displays the SubTotal rounded to two decimal places. Include the SalesOrderID column in the results.*/
+
+SELECT SalesOrderID,
+       ROUND(SubTotal, 2) AS RoundedSubTotal
+FROM Sales.SalesOrderHeader;
+
+
+/*Write a statement that generates a random number between 1 and 10 each time it is run.*/
+
+SELECT FLOOR(RAND() * 10) + 1 AS RandomNumber;
+
+//Grouping by aggregating functions
+------------------------------------
+
+
+/*Write a query that shows the total number of items ordered for each product. Use the Sales.SalesOrderDetail table to write the query.*/
+
+SELECT ProductID,
+       SUM(OrderQty) AS TotalItemsOrdered
+FROM Sales.SalesOrderDetail
+GROUP BY ProductID;
+
+
+
+
+/*Write a query using the Production.Product table that lists a count of the products in each product line.*/
+
+SELECT ProductLine,
+       COUNT(*) AS ProductCount
+FROM Production.Product
+GROUP BY ProductLine;
+
+
+
+/*Write a query that creates a sum of the LineTotal in the Sales.SalesOrderDetail table grouped by the SalesOrderID. Include only those rows where the sum exceeds 1,000.*/
+
+SELECT SalesOrderID,
+       SUM(LineTotal) AS TotalLineAmount
+FROM Sales.SalesOrderDetail
+GROUP BY SalesOrderID
+HAVING SUM(LineTotal) > 1000;
+
+//Sub queries
+-------------
+
+
+
+/*Display the CustomerID, SalesOrderID, and OrderDate for each Sales.SalesOrderHeader row as long as the customer has placed at least five orders.*/
+
+SELECT CustomerID,
+       SalesOrderID,
+       OrderDate
+FROM Sales.SalesOrderHeader
+WHERE CustomerID IN
+(
+    SELECT CustomerID
+    FROM Sales.SalesOrderHeader
+    GROUP BY CustomerID
+    HAVING COUNT(*) >= 5
+);
+
+
+
+/*Using a subquery, display the product names and ProductID numbers from the Production.Product table that have been ordered.*/
+
+SELECT ProductID,
+       Name
+FROM Production.Product
+WHERE ProductID IN
+(
+    SELECT ProductID
+    FROM Sales.SalesOrderDetail
+);
+
+
+/*Change the query written in question 2 to display the products that have not been ordered.*/
+
+
+
+SELECT ProductID,
+       Name
+FROM Production.Product
+WHERE ProductID NOT IN
+(
+    SELECT ProductID
+    FROM Sales.SalesOrderDetail
+);
+
+
+
+/*Write a query that displays the colors used in the Production.Product table that are not listed in the Production.ProductColor table using a subquery. Use the keyword DISTINCT before the column name to return each color only once.*/
+
+SELECT DISTINCT Color
+FROM Production.Product
+WHERE Color IS NOT NULL
+AND Color NOT IN
+(
+    SELECT Color
+    FROM Production.ProductColor
+);
+
+/*Write a UNION query that combines the ModifiedDate from Person.Person and the HireDate from HumanResources.Employee.*/
+
+SELECT ModifiedDate AS DateValue
+FROM Person.Person
+
+UNION
+
+SELECT HireDate
+FROM HumanResources.Employee;
