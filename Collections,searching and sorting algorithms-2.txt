@@ -1,0 +1,623 @@
+//Collections
+-------------
+/* Create an Employee class with following properties
+
+EmployeeName as string
+EmployeeID as int
+Salary as double
+
+Create another class called EmployeeDAL which has the following methods.
+
+Create an ArrayList within this class.
+Define the below methods:
+a. public bool AddEmployee(Employee e)
+b. public bool DeleteEmployee(int id)
+c. public string SearchEmployee(int id) : Returns the employee name if found else return null
+d. public Employee[] GetAllEmployees()
+Use an ArrayList to store the employees.
+Write a test program to test all the functionalities.*/
+
+
+
+code:
+-----
+
+using System;
+using System.Collections;
+
+class Employee
+{
+    public string EmployeeName;
+    public int EmployeeID;
+    public double Salary;
+
+    public Employee(string name, int id, double salary)
+    {
+        EmployeeName = name;
+        EmployeeID = id;
+        Salary = salary;
+    }
+}
+
+class EmployeeDAL
+{
+    ArrayList list = new ArrayList();
+
+    public bool AddEmployee(Employee e)
+    {
+        list.Add(e);
+        return true;
+    }
+
+    public bool DeleteEmployee(int id)
+    {
+        foreach (Employee e in list)
+        {
+            if (e.EmployeeID == id)
+            {
+                list.Remove(e);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public string SearchEmployee(int id)
+    {
+        foreach (Employee e in list)
+        {
+            if (e.EmployeeID == id)
+                return e.EmployeeName;
+        }
+        return null;
+    }
+
+    public Employee[] GetAllEmployees()
+    {
+        Employee[] emp = new Employee[list.Count];
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            emp[i] = (Employee)list[i];
+        }
+
+        return emp;
+    }
+}
+
+class Test
+{
+    public static void Main()
+    {
+        EmployeeDAL obj = new EmployeeDAL();
+
+        obj.AddEmployee(new Employee("Ravi", 101, 35000));
+        obj.AddEmployee(new Employee("Priya", 102, 42000));
+        obj.AddEmployee(new Employee("Rahul", 103, 50000));
+
+        Console.WriteLine("Search Employee ID 102:");
+        Console.WriteLine(obj.SearchEmployee(102));
+
+        Console.WriteLine();
+
+        Console.WriteLine("Delete Employee ID 101:");
+        Console.WriteLine(obj.DeleteEmployee(101));
+
+        Console.WriteLine();
+
+        Console.WriteLine("Employee Details:");
+
+        Employee[] emp = obj.GetAllEmployees();
+
+        foreach (Employee e in emp)
+        {
+            Console.WriteLine(e.EmployeeID + " " + e.EmployeeName + " " + e.Salary);
+        }
+    }
+}
+
+
+
+//Generics
+-----------
+
+/*Implement the hands-on 1 using SortedList being EmployeeID as a key.*/
+
+code:
+-----
+using System;
+using System.Collections;
+
+class Employee
+{
+    public string EmployeeName;
+    public int EmployeeID;
+    public double Salary;
+
+    public Employee(string name, int id, double salary)
+    {
+        EmployeeName = name;
+        EmployeeID = id;
+        Salary = salary;
+    }
+}
+
+class EmployeeDAL
+{
+    SortedList list = new SortedList();
+
+    public bool AddEmployee(Employee e)
+    {
+        if (list.ContainsKey(e.EmployeeID))
+            return false;
+
+        list.Add(e.EmployeeID, e);
+        return true;
+    }
+
+    public bool DeleteEmployee(int id)
+    {
+        if (list.ContainsKey(id))
+        {
+            list.Remove(id);
+            return true;
+        }
+        return false;
+    }
+
+    public string SearchEmployee(int id)
+    {
+        if (list.ContainsKey(id))
+        {
+            Employee e = (Employee)list[id];
+            return e.EmployeeName;
+        }
+        return null;
+    }
+
+    public Employee[] GetAllEmployees()
+    {
+        Employee[] emp = new Employee[list.Count];
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            emp[i] = (Employee)list.GetByIndex(i);
+        }
+
+        return emp;
+    }
+}
+
+class Test
+{
+    public static void Main()
+    {
+        EmployeeDAL obj = new EmployeeDAL();
+
+        obj.AddEmployee(new Employee("Ravi",101,30000));
+        obj.AddEmployee(new Employee("Priya",103,45000));
+        obj.AddEmployee(new Employee("Rahul",102,40000));
+
+        Console.WriteLine(obj.SearchEmployee(102));
+
+        obj.DeleteEmployee(101);
+
+        Employee[] e = obj.GetAllEmployees();
+
+        foreach(Employee x in e)
+        {
+            Console.WriteLine(x.EmployeeID+" "+x.EmployeeName+" "+x.Salary);
+        }
+    }
+}
+
+/*Modify hands-on 1 with Generic List*/
+
+code:
+
+using System;
+using System.Collections.Generic;
+
+class Employee
+{
+    public string EmployeeName;
+    public int EmployeeID;
+    public double Salary;
+
+    public Employee(string name,int id,double salary)
+    {
+        EmployeeName=name;
+        EmployeeID=id;
+        Salary=salary;
+    }
+}
+
+class EmployeeDAL
+{
+    List<Employee> list=new List<Employee>();
+
+    public bool AddEmployee(Employee e)
+    {
+        list.Add(e);
+        return true;
+    }
+
+    public bool DeleteEmployee(int id)
+    {
+        foreach(Employee e in list)
+        {
+            if(e.EmployeeID==id)
+            {
+                list.Remove(e);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public string SearchEmployee(int id)
+    {
+        foreach(Employee e in list)
+        {
+            if(e.EmployeeID==id)
+                return e.EmployeeName;
+        }
+        return null;
+    }
+
+    public Employee[] GetAllEmployees()
+    {
+        return list.ToArray();
+    }
+}
+
+class Test
+{
+    public static void Main()
+    {
+        EmployeeDAL obj=new EmployeeDAL();
+
+        obj.AddEmployee(new Employee("Ravi",101,35000));
+        obj.AddEmployee(new Employee("Priya",102,40000));
+        obj.AddEmployee(new Employee("Rahul",103,50000));
+
+        Console.WriteLine(obj.SearchEmployee(102));
+
+        obj.DeleteEmployee(101);
+
+        Employee[] emp=obj.GetAllEmployees();
+
+        foreach(Employee e in emp)
+        {
+            Console.WriteLine(e.EmployeeID+" "+e.EmployeeName+" "+e.Salary);
+        }
+    }
+}
+
+
+/*Create a Program class to accept a string, containing multiple words with alphabets and digits. Each alphabet should be added to the AlphaList and each digit should be added to the DigitList. And sort both the lists.*/
+
+
+code:
+-----
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    public static void Main()
+    {
+        Console.Write("Enter a string: ");
+        string s = Console.ReadLine();
+
+        List<char> AlphaList = new List<char>();
+        List<char> DigitList = new List<char>();
+
+        foreach(char ch in s)
+        {
+            if(char.IsLetter(ch))
+                AlphaList.Add(ch);
+            else if(char.IsDigit(ch))
+                DigitList.Add(ch);
+        }
+
+        AlphaList.Sort();
+        DigitList.Sort();
+
+        Console.WriteLine("Alpha List:");
+        foreach(char c in AlphaList)
+            Console.Write(c+" ");
+
+        Console.WriteLine();
+
+        Console.WriteLine("Digit List:");
+        foreach(char c in DigitList)
+            Console.Write(c+" ");
+    }
+}
+
+/*Create an Employee class with the following auto implemented properties.
+
+EmployeeID as integer
+EmployeeName as string
+Designation as string
+JoiningDate as DateTime
+DepartmentName as string
+
+Create another class with the name, EmployeeData having the auto implemented properties.
+
+EmployeeInfo as List
+
+Define a method that reads the employee details and stores them in a file in CSV format. To do this, the method should first read and add the employee details to the EmployeeInfo collection. Later the details present in the List should be stored in a file. Ensure that the previous data has to be retained everytime a new data is added.*/
+
+code:
+----
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+class Employee
+{
+    public int EmployeeID { get; set; }
+    public string EmployeeName { get; set; }
+    public string Designation { get; set; }
+    public DateTime JoiningDate { get; set; }
+    public string DepartmentName { get; set; }
+}
+
+class EmployeeData
+{
+    public List<Employee> EmployeeInfo { get; set; }
+
+    public EmployeeData()
+    {
+        EmployeeInfo = new List<Employee>();
+    }
+
+    public void AddEmployee()
+    {
+        Employee e = new Employee();
+
+        Console.Write("Enter Employee ID: ");
+        e.EmployeeID = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter Employee Name: ");
+        e.EmployeeName = Console.ReadLine();
+
+        Console.Write("Enter Designation: ");
+        e.Designation = Console.ReadLine();
+
+        Console.Write("Enter Joining Date (dd/mm/yyyy): ");
+        e.JoiningDate = DateTime.Parse(Console.ReadLine());
+
+        Console.Write("Enter Department Name: ");
+        e.DepartmentName = Console.ReadLine();
+
+        EmployeeInfo.Add(e);
+
+        using (StreamWriter sw = new StreamWriter("Employee.csv", true))
+        {
+            sw.WriteLine(e.EmployeeID + "," +
+                         e.EmployeeName + "," +
+                         e.Designation + "," +
+                         e.JoiningDate.ToShortDateString() + "," +
+                         e.DepartmentName);
+        }
+
+        Console.WriteLine("Employee details saved successfully.");
+    }
+
+    public void DisplayEmployees()
+    {
+        foreach (Employee e in EmployeeInfo)
+        {
+            Console.WriteLine(e.EmployeeID + " " +
+                              e.EmployeeName + " " +
+                              e.Designation + " " +
+                              e.JoiningDate.ToShortDateString() + " " +
+                              e.DepartmentName);
+        }
+    }
+}
+
+class Test
+{
+    public static void Main()
+    {
+        EmployeeData obj = new EmployeeData();
+
+        char ch;
+
+        do
+        {
+            obj.AddEmployee();
+
+            Console.Write("Add another employee (Y/N): ");
+            ch = Convert.ToChar(Console.ReadLine());
+
+        } while (ch == 'Y' || ch == 'y');
+
+        Console.WriteLine();
+        Console.WriteLine("Employees in List:");
+        obj.DisplayEmployees();
+    }
+}
+
+/*Create a console application to manage a queue of customer service requests in banking domain. The application has to create a service token and manage it. The application must have a class, "ServiceToken" with the auto implemented properties TokenID as integer (auto generated), Position, TicketDateTime as DateTime, Status as string. This class must have a instance constructor to assign the values to these properties.
+
+The application should define another class, TicketManager, with Queue as an auto implemented property. In this class define the below methods with the mentioned behavior.
+
+GenerateServiceToken() : This method should create an instance of ServiceToken class and add to the Queue.
+GetNextToken() : This method should get the next available token from the Queue.
+UpdateToken(int TokenID) : This method should update the corresponding token's status to Complete.
+SkipToken() : This method should skip the immediate next token and return the subsequent token.
+
+Write a driver code to display the UI as below and call the respective operations when an option is selected.*/
+
+
+code:
+-----
+using System;
+using System.Collections.Generic;
+
+class ServiceToken
+{
+    private static int id = 1;
+
+    public int TokenID { get; set; }
+    public int Position { get; set; }
+    public DateTime TicketDateTime { get; set; }
+    public string Status { get; set; }
+
+    public ServiceToken(int position, DateTime date, string status)
+    {
+        TokenID = id++;
+        Position = position;
+        TicketDateTime = date;
+        Status = status;
+    }
+}
+
+class TicketManager
+{
+    public Queue<ServiceToken> Queue { get; set; }
+    public List<ServiceToken> TokenList { get; set; }
+
+    public TicketManager()
+    {
+        Queue = new Queue<ServiceToken>();
+        TokenList = new List<ServiceToken>();
+    }
+
+    public void GenerateServiceToken()
+    {
+        ServiceToken token = new ServiceToken(Queue.Count + 1, DateTime.Now, "Pending");
+        Queue.Enqueue(token);
+        TokenList.Add(token);
+
+        Console.WriteLine("Token Generated Successfully");
+        Console.WriteLine("Token ID : " + token.TokenID);
+    }
+
+    public void GetNextToken()
+    {
+        if (Queue.Count == 0)
+        {
+            Console.WriteLine("No Tokens Available");
+            return;
+        }
+
+        ServiceToken token = Queue.Peek();
+
+        Console.WriteLine("Next Token");
+        Console.WriteLine("Token ID : " + token.TokenID);
+        Console.WriteLine("Position : " + token.Position);
+        Console.WriteLine("Status   : " + token.Status);
+    }
+
+    public void UpdateToken(int tokenId)
+    {
+        foreach (ServiceToken t in TokenList)
+        {
+            if (t.TokenID == tokenId)
+            {
+                t.Status = "Complete";
+
+                if (Queue.Count > 0 && Queue.Peek().TokenID == tokenId)
+                    Queue.Dequeue();
+
+                Console.WriteLine("Token Updated Successfully");
+                return;
+            }
+        }
+
+        Console.WriteLine("Token Not Found");
+    }
+
+    public void SkipToken()
+    {
+        if (Queue.Count <= 1)
+        {
+            Console.WriteLine("Cannot Skip Token");
+            return;
+        }
+
+        Queue.Dequeue();
+
+        ServiceToken token = Queue.Peek();
+
+        Console.WriteLine("Current Token After Skip");
+        Console.WriteLine("Token ID : " + token.TokenID);
+    }
+
+    public void ListAllTokens()
+    {
+        foreach (ServiceToken t in TokenList)
+        {
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("Token ID : " + t.TokenID);
+            Console.WriteLine("Position : " + t.Position);
+            Console.WriteLine("Date     : " + t.TicketDateTime);
+            Console.WriteLine("Status   : " + t.Status);
+        }
+    }
+}
+
+class Test
+{
+    static void Main()
+    {
+        TicketManager manager = new TicketManager();
+
+        while (true)
+        {
+            Console.WriteLine();
+            Console.WriteLine("******************************");
+            Console.WriteLine(" TOKEN MANAGEMENT SYSTEM");
+            Console.WriteLine("******************************");
+            Console.WriteLine("1. Create Token");
+            Console.WriteLine("2. Get Next Token");
+            Console.WriteLine("3. Update Token");
+            Console.WriteLine("4. Skip Token");
+            Console.WriteLine("5. List All Tokens");
+            Console.WriteLine("6. Exit");
+            Console.Write("Enter your Choice: ");
+
+            int choice = int.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    manager.GenerateServiceToken();
+                    break;
+
+                case 2:
+                    manager.GetNextToken();
+                    break;
+
+                case 3:
+                    Console.Write("Enter Token ID: ");
+                    int id = int.Parse(Console.ReadLine());
+                    manager.UpdateToken(id);
+                    break;
+
+                case 4:
+                    manager.SkipToken();
+                    break;
+
+                case 5:
+                    manager.ListAllTokens();
+                    break;
+
+                case 6:
+                    return;
+
+                default:
+                    Console.WriteLine("Invalid Choice");
+                    break;
+            }
+        }
+    }
+}
