@@ -1,0 +1,85 @@
+/*Write a console based calculator application along with the proper test cases to test the application using NUnit framework.*/
+
+code:
+-----
+
+using System;
+
+public class Calculator
+{
+    public int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    public int Subtract(int a, int b)
+    {
+        return a - b;
+    }
+
+    public int Multiply(int a, int b)
+    {
+        return a * b;
+    }
+
+    public double Divide(int a, int b)
+    {
+        if (b == 0)
+            throw new DivideByZeroException();
+
+        return (double)a / b;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Calculator cal = new Calculator();
+
+        Console.Write("Enter First Number: ");
+        int a = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter Second Number: ");
+        int b = int.Parse(Console.ReadLine());
+
+        Console.WriteLine("1. Add");
+        Console.WriteLine("2. Subtract");
+        Console.WriteLine("3. Multiply");
+        Console.WriteLine("4. Divide");
+
+        Console.Write("Enter Choice: ");
+        int ch = int.Parse(Console.ReadLine());
+
+        switch (ch)
+        {
+            case 1:
+                Console.WriteLine("Result = " + cal.Add(a, b));
+                break;
+
+            case 2:
+                Console.WriteLine("Result = " + cal.Subtract(a, b));
+                break;
+
+            case 3:
+                Console.WriteLine("Result = " + cal.Multiply(a, b));
+                break;
+
+            case 4:
+                try
+                {
+                    Console.WriteLine("Result = " + cal.Divide(a, b));
+                }
+                catch (DivideByZeroException)
+                {
+                    Console.WriteLine("Cannot Divide by Zero");
+                }
+                break;
+
+            default:
+                Console.WriteLine("Invalid Choice");
+                break;
+        }
+    }
+}
+

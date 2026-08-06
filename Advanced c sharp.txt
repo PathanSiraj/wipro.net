@@ -1,0 +1,190 @@
+//Delegates
+
+/*Create a class to perform the mathematical operations such as Add, Multiply, Subtract, Divide. Create a delegate to call these methods from the Main() method.*/
+
+code:
+-----
+using System;
+
+class Calculator
+{
+    public int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    public int Subtract(int a, int b)
+    {
+        return a - b;
+    }
+
+    public int Multiply(int a, int b)
+    {
+        return a * b;
+    }
+
+    public int Divide(int a, int b)
+    {
+        return a / b;
+    }
+}
+
+delegate int MathOperation(int a, int b);
+
+class Test
+{
+    public static void Main()
+    {
+        Calculator obj = new Calculator();
+
+        Console.Write("Enter First Number: ");
+        int a = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter Second Number: ");
+        int b = int.Parse(Console.ReadLine());
+
+        Console.WriteLine("1. Add");
+        Console.WriteLine("2. Subtract");
+        Console.WriteLine("3. Multiply");
+        Console.WriteLine("4. Divide");
+
+        Console.Write("Enter Choice: ");
+        int ch = int.Parse(Console.ReadLine());
+
+        MathOperation op;
+
+        switch (ch)
+        {
+            case 1:
+                op = obj.Add;
+                Console.WriteLine("Addition = " + op(a, b));
+                break;
+
+            case 2:
+                op = obj.Subtract;
+                Console.WriteLine("Subtraction = " + op(a, b));
+                break;
+
+            case 3:
+                op = obj.Multiply;
+                Console.WriteLine("Multiplication = " + op(a, b));
+                break;
+
+            case 4:
+                if (b == 0)
+                {
+                    Console.WriteLine("Cannot divide by zero");
+                }
+                else
+                {
+                    op = obj.Divide;
+                    Console.WriteLine("Division = " + op(a, b));
+                }
+                break;
+
+            default:
+                Console.WriteLine("Invalid Choice");
+                break;
+        }
+    }
+}
+
+
+//Reflection
+-------------
+
+/*Create a console application that loads the movie mini project assembly and display the information of the following:
+
+Assembly Information
+Module Information
+Classes Information
+Constructors Information
+Properties Information
+Methods Information
+Parameters Information
+
+Display the above information in the below format:
+
+Assembly Name
+    Module Name
+        Class Name
+            Constructor Names with Parameters
+            Property Names
+            Method Names with Parameters
+
+Repeat the class name, constructor and method names hierarchy for each class available in the assembly.*/
+
+
+code:
+-----
+
+using System;
+using System.Reflection;
+
+class Test
+{
+    static void Main()
+    {
+        Console.Write("Enter Assembly Path: ");
+        string path = Console.ReadLine();
+
+        Assembly asm = Assembly.LoadFrom(path);
+
+        Console.WriteLine("Assembly Name : " + asm.GetName().Name);
+
+        foreach (Module module in asm.GetModules())
+        {
+            Console.WriteLine("\nModule Name : " + module.Name);
+
+            foreach (Type type in module.GetTypes())
+            {
+                Console.WriteLine("\n   Class Name : " + type.Name);
+
+                Console.WriteLine("      Constructors:");
+
+                foreach (ConstructorInfo c in type.GetConstructors())
+                {
+                    Console.Write("         " + c.Name + "(");
+
+                    ParameterInfo[] p = c.GetParameters();
+
+                    for (int i = 0; i < p.Length; i++)
+                    {
+                        Console.Write(p[i].ParameterType.Name + " " + p[i].Name);
+
+                        if (i < p.Length - 1)
+                            Console.Write(", ");
+                    }
+
+                    Console.WriteLine(")");
+                }
+
+                Console.WriteLine("      Properties:");
+
+                foreach (PropertyInfo prop in type.GetProperties())
+                {
+                    Console.WriteLine("         " + prop.PropertyType.Name + " " + prop.Name);
+                }
+
+                Console.WriteLine("      Methods:");
+
+                foreach (MethodInfo m in type.GetMethods())
+                {
+                    Console.Write("         " + m.ReturnType.Name + " " + m.Name + "(");
+
+                    ParameterInfo[] p = m.GetParameters();
+
+                    for (int i = 0; i < p.Length; i++)
+                    {
+                        Console.Write(p[i].ParameterType.Name + " " + p[i].Name);
+
+                        if (i < p.Length - 1)
+                            Console.Write(", ");
+                    }
+
+                    Console.WriteLine(")");
+                }
+            }
+        }
+    }
+}
